@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname.startsWith('/login')
   const isStaticFile = request.nextUrl.pathname.startsWith('/_next') || request.nextUrl.pathname.includes('.')
   
