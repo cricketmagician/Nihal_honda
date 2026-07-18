@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Dealership {
+  id        String     @id @default(uuid())
+  name      String
+  users     User[]
+  customers Customer[]
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  role         String
+  dealershipId String
+  dealership   Dealership    @relation(fields: [dealershipId], references: [id])
+  tasks        Task[]
+  interactions Interaction[]
+}
+
+model Customer {
+  id           String        @id @default(uuid())
+  name         String
+  fatherName   String?
+  phone        String
+  phone2       String?
+  phone3       String?
+  address      String?
+  village      String?
+  dealershipId String
+  dealership   Dealership    @relation(fields: [dealershipId], references: [id])
+  vehicles     Vehicle[]
+  tasks        Task[]
+  interactions Interaction[]
+  complaints   Complaint[]
+}
+
+model Vehicle {
+  id            String   @id @default(uuid())
+  model         String
+  color         String?
+  chassisNo     String?
+  engineNo      String?
+  keyNo         String?
+  finance       String?
+  price         Int?
+  downPayment   Int?
+  remarks       String?
+  purchaseDate  DateTime
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model Task {
+  id         String   @id @default(uuid())
+  type       String   // e.g. "Call", "WhatsApp"
+  status     String   // e.g. "Pending", "Done"
+  dueDate    DateTime
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+}
+
+model Interaction {
+  id            String   @id @default(uuid())
+  callStatus    String
+  customerMood  String?
+  bikeStatus    String?
+  serviceStatus String?
+  interest      String?
+  problems      String?  // comma separated
+  notes         String?
+  nextFollowUp  Int?     // days
+  createdAt     DateTime @default(now())
+  
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model Complaint {
+  id          String   @id @default(uuid())
+  status      String   @default("Open") // Open, In Progress, Resolved
+  description String
+  createdAt   DateTime @default(now())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id])
+}
