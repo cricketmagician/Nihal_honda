@@ -2,6 +2,7 @@
 
 import { PrismaClient } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
+import { getSessionUser } from './actions/auth'
 
 const prisma = new PrismaClient()
 
@@ -103,12 +104,12 @@ export async function addCustomer(formData: FormData) {
   }
 
   // Get dealership and user to associate the customer/task with
+  const user = await getSessionUser()
+  if (!user) throw new Error("No user found")
+  
   let dealership = await prisma.dealership.findFirst()
   if (!dealership) dealership = await prisma.dealership.create({ data: { name: 'Honda Main Branch' } })
   
-  let user = await prisma.user.findFirst()
-  if (!user) user = await prisma.user.create({ data: { name: 'Sales Executive', role: 'Sales', dealershipId: dealership.id } })
-
   const customer = await prisma.customer.create({
     data: {
       name,

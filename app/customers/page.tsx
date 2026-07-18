@@ -49,7 +49,7 @@ export default async function CustomersPage({ searchParams }: { searchParams?: P
         <SearchBar initialQ={q} />
       </header>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-x-auto">
         <table className="w-full text-left text-sm whitespace-nowrap">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>

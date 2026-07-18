@@ -17,6 +17,8 @@ model Dealership {
 model User {
   id           String        @id @default(uuid())
   name         String
+  username     String?       @unique
+  password     String?
   role         String
   dealershipId String
   dealership   Dealership    @relation(fields: [dealershipId], references: [id])

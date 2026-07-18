@@ -5,8 +5,10 @@ const prisma = new PrismaClient()
 
 import { CallForm } from './CallForm'
 
+import { getSessionUser } from '../actions/auth'
+
 export default async function QueuePage() {
-  const user = await prisma.user.findFirst()
+  const user = await getSessionUser()
   if (!user) return <div className="p-10">No users found. Please seed the DB.</div>
 
   const today = new Date()

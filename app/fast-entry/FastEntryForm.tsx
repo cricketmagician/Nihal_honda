@@ -57,14 +57,14 @@ export function FastEntryForm() {
         </div>
       )}
 
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="bg-blue-600 px-8 py-6 text-white">
+      <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-blue-600 px-5 py-5 md:px-8 md:py-6 text-white">
           <h2 className="text-xl font-bold">⚡ Lightning Fast Entry</h2>
           <p className="text-blue-100 text-sm mt-1">Keep your hands on the keyboard. Type &rarr; Tab &rarr; Enter.</p>
         </div>
 
-        <form ref={formRef} onSubmit={handleSubmit} className="p-8 space-y-6">
-          <div className="grid grid-cols-2 gap-6">
+        <form ref={formRef} onSubmit={handleSubmit} className="p-5 md:p-8 space-y-4 md:space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 block">Customer Name</label>
               <input 
