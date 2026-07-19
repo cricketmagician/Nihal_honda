@@ -1,10 +1,8 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { getSessionUser } from './actions/auth'
-
-const prisma = new PrismaClient()
 
 // Helper to calculate initial call due date based on purchase anniversary
 function getInitialDueDate(purchaseDate: Date): Date {

@@ -10,11 +10,9 @@ export const metadata: Metadata = {
   description: "Next-gen OS for Dealerships",
 };
 
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { cookies } from 'next/headers'
 import { LayoutDashboard, Phone, Users, Zap, AlertCircle, BarChart2, LogOut } from 'lucide-react'
-
-const prisma = new PrismaClient()
 
 export default async function RootLayout({
   children,

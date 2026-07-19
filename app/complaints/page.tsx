@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { resolveComplaint } from '../actions'
 import Link from 'next/link'
-
-const prisma = new PrismaClient()
 
 export default async function ComplaintsPage() {
   const openComplaints = await prisma.complaint.findMany({

@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { SearchBar } from './SearchBar'
 import { DeleteCustomerButton } from './DeleteCustomerButton'
-
-const prisma = new PrismaClient()
 
 export default async function CustomersPage({ searchParams }: { searchParams?: Promise<{ q?: string, profile?: string }> }) {
   const resolvedSearchParams = await searchParams;

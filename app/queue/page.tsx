@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { getSessionUser } from '../actions/auth'
 import { QueueManager } from './QueueManager'
-
-const prisma = new PrismaClient()
 
 export default async function QueuePage() {
   const user = await getSessionUser()

@@ -1,10 +1,8 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-
-const prisma = new PrismaClient()
 
 export async function loginAction(formData: FormData) {
   const username = formData.get('username') as string

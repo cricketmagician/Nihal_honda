@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { addCustomer } from './actions'
 import { QuickAddForm } from './QuickAddForm'
-
-const prisma = new PrismaClient()
 
 // Clean CSS-only progress bar
 const ProgressBar = ({ value, label, color = "bg-indigo-500" }: { value: number, label: string, color?: string }) => (
