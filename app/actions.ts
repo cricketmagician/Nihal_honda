@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { getSessionUser } from './actions/auth'
+import { redirect } from 'next/navigation'
 
 // Helper to calculate initial call due date based on purchase anniversary
 function getInitialDueDate(purchaseDate: Date): Date {
@@ -134,12 +135,13 @@ export async function logInteraction(formData: FormData) {
     }
   })
 
-  // 4. Automation: If Major Problem, create a Complaint Ticket
-  if (bikeStatus === 'Major Problem') {
+  // 4. Automation: If Minor or Major Problem, create a Complaint Ticket
+  const shouldCreateComplaint = bikeStatus === 'Major Problem' || bikeStatus === 'Minor Problem'
+  if (shouldCreateComplaint) {
     await prisma.complaint.create({
       data: {
         customerId,
-        description: `Auto-generated from Call. Problems: ${problems}. Notes: ${notes}`,
+        description: `Auto-generated from Call (Bike Status: ${bikeStatus}). Problems: ${problems}. Notes: ${notes}`,
         status: 'Open',
       }
     })
@@ -149,6 +151,10 @@ export async function logInteraction(formData: FormData) {
   revalidatePath('/queue')
   revalidatePath('/')
   revalidatePath('/customers')
+
+  if (shouldCreateComplaint) {
+    redirect('/complaints')
+  }
 }
 
 export async function addCustomer(formData: FormData) {
