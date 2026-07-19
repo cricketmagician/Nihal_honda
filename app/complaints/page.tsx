@@ -1,8 +1,14 @@
 import prisma from '@/lib/prisma'
 import { resolveComplaint } from '../actions'
 import Link from 'next/link'
+import { getSessionUser } from '../actions/auth'
+import { redirect } from 'next/navigation'
 
 export default async function ComplaintsPage() {
+  const user = await getSessionUser()
+  if (!user || user.role !== 'Owner') {
+    redirect('/')
+  }
   const openComplaints = await prisma.complaint.findMany({
     where: { status: 'Open' },
     include: { customer: true },

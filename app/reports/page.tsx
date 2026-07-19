@@ -1,6 +1,12 @@
 import prisma from '@/lib/prisma'
+import { getSessionUser } from '../actions/auth'
+import { redirect } from 'next/navigation'
 
 export default async function ReportsPage() {
+  const user = await getSessionUser()
+  if (!user || user.role !== 'Owner') {
+    redirect('/')
+  }
   // 1. Village Aggregation
   const customers = await prisma.customer.findMany({ select: { village: true } })
   const villageCount: Record<string, number> = {}

@@ -158,7 +158,12 @@ export async function logInteraction(formData: FormData) {
   revalidatePath('/customers')
 
   if (shouldCreateComplaint) {
-    redirect('/complaints')
+    const sessionUser = await getSessionUser()
+    if (sessionUser?.role === 'Owner') {
+      redirect('/complaints')
+    } else {
+      redirect('/queue')
+    }
   }
 }
 
