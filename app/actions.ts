@@ -135,13 +135,18 @@ export async function logInteraction(formData: FormData) {
     }
   })
 
-  // 4. Automation: If Minor or Major Problem, create a Complaint Ticket
-  const shouldCreateComplaint = bikeStatus === 'Major Problem' || bikeStatus === 'Minor Problem'
+  // 4. Automation: If Minor/Major Problem is selected OR any Problems Log is checked OR Notes are entered
+  const shouldCreateComplaint = 
+    bikeStatus === 'Major Problem' || 
+    bikeStatus === 'Minor Problem' || 
+    (problems && problems.trim().length > 0) || 
+    (notes && notes.trim().length > 0)
+
   if (shouldCreateComplaint) {
     await prisma.complaint.create({
       data: {
         customerId,
-        description: `Auto-generated from Call (Bike Status: ${bikeStatus}). Problems: ${problems}. Notes: ${notes}`,
+        description: `Auto-generated from Call. Bike Status: ${bikeStatus || 'N/A'}. Problems: ${problems || 'None'}. Notes: ${notes || 'None'}`,
         status: 'Open',
       }
     })
