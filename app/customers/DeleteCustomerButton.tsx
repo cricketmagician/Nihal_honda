@@ -21,9 +21,11 @@ export function DeleteCustomerButton({ customerId, customerName }: { customerId:
     <button 
       onClick={handleDelete}
       disabled={isPending}
-      className="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-lg font-bold border border-red-200 transition-colors"
+      className="text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold px-4 py-2 rounded-xl transition-all border border-rose-100 active:scale-95 disabled:opacity-50"
     >
       {isPending ? 'Deleting...' : 'Delete Customer'}
     </button>
   )
 }
+
+
