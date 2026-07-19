@@ -306,3 +306,108 @@ export async function deleteCustomerAction(formData: FormData) {
   revalidatePath('/queue')
   revalidatePath('/')
 }
+
+export async function updateCustomerAction(formData: FormData) {
+  const id = formData.get('customerId') as string
+  const name = (formData.get('name') as string)?.trim()
+  const fatherName = (formData.get('fatherName') as string)?.trim()
+  const phone = (formData.get('phone') as string)?.trim()
+  const phone2 = (formData.get('phone2') as string)?.trim()
+  const address = (formData.get('address') as string)?.trim()
+  const village = (formData.get('village') as string)?.trim()
+
+  if (!id) throw new Error('Customer ID is required')
+  if (!name) return { error: 'Customer Name is required.' }
+  if (!phone) return { error: 'Phone Number is required.' }
+
+  const digitsOnly = phone.replace(/\D/g, '')
+  if (digitsOnly.length < 10) {
+    return { error: `Phone number must be a valid 10-digit mobile number.` }
+  }
+
+  // Check for duplicate phone number (excluding this customer)
+  const duplicate = await prisma.customer.findFirst({
+    where: {
+      phone,
+      NOT: { id }
+    }
+  })
+  if (duplicate) {
+    return { error: `Another customer with mobile number ${phone} already exists (Name: ${duplicate.name}).` }
+  }
+
+  // Update customer
+  await prisma.customer.update({
+    where: { id },
+    data: {
+      name,
+      fatherName: fatherName || null,
+      phone,
+      phone2: phone2 || null,
+      address: address || null,
+      village: village || null,
+    }
+  })
+
+  // Update vehicle if data is provided
+  const vehicleId = formData.get('vehicleId') as string
+  if (vehicleId) {
+    const model = (formData.get('vehicleModel') as string)?.trim()
+    const purchaseDateStr = (formData.get('purchaseDate') as string)?.trim()
+    const color = (formData.get('vehicleColor') as string)?.trim()
+    const finance = (formData.get('vehicleFinance') as string)?.trim()
+    const priceStr = (formData.get('vehiclePrice') as string)?.trim()
+
+    if (!model) return { error: 'Vehicle Model is strictly compulsory.' }
+    if (!purchaseDateStr) return { error: 'Purchase Date is required.' }
+
+    // Parse purchase date
+    const normalizedDateStr = purchaseDateStr.replace(/-/g, '/')
+    let parsedDate = new Date(normalizedDateStr)
+    
+    if (normalizedDateStr.includes('/')) {
+      const parts = normalizedDateStr.split('/')
+      let day = parts[0]
+      let month = parts[1]
+      let yearStr = parts[2]
+      
+      if (parts[0] && parts[0].length === 4 || (parts[0] && parts[0].length === 2 && parseInt(parts[0]) > 31)) {
+        yearStr = parts[0]
+        month = parts[1]
+        day = parts[2]
+      }
+      
+      if (day && month && yearStr) {
+        let year = parseInt(yearStr)
+        if (yearStr.length === 2) {
+          year = year < 80 ? 2000 + year : 1900 + year
+        }
+        parsedDate = new Date(`${year}-${month}-${day}`)
+      }
+    }
+
+    if (isNaN(parsedDate.getTime())) {
+      return { error: 'Purchase Date is not formatted correctly. Use DD/MM/YY or DD/MM/YYYY.' }
+    }
+
+    const price = priceStr ? parseFloat(priceStr) : null
+
+    await prisma.vehicle.update({
+      where: { id: vehicleId },
+      data: {
+        model,
+        purchaseDate: parsedDate,
+        color: color || null,
+        finance: finance || null,
+        price,
+      }
+    })
+  }
+
+  revalidatePath('/customers')
+  revalidatePath('/queue')
+  revalidatePath('/')
+
+  return { success: true }
+}
+
