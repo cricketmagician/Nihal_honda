@@ -91,7 +91,7 @@ export async function addCustomer(formData: FormData) {
   const village = formData.get('village') as string
 
   if (!name || !phone || !model || !dateStr) {
-    throw new Error('Missing compulsory fields')
+    return { error: 'Missing compulsory fields' }
   }
 
   // Handle DD/MM/YYYY or YYYY-MM-DD
@@ -109,6 +109,13 @@ export async function addCustomer(formData: FormData) {
   
   let dealership = await prisma.dealership.findFirst()
   if (!dealership) dealership = await prisma.dealership.create({ data: { name: 'Honda Main Branch' } })
+  
+  const existingCustomer = await prisma.customer.findFirst({
+    where: { phone }
+  })
+  if (existingCustomer) {
+    return { error: `A customer with phone number ${phone} already exists!` }
+  }
   
   const customer = await prisma.customer.create({
     data: {
@@ -141,6 +148,8 @@ export async function addCustomer(formData: FormData) {
   revalidatePath('/')
   revalidatePath('/queue')
   revalidatePath('/customers')
+  
+  return { success: true }
 }
 
 export async function resolveComplaint(formData: FormData) {
@@ -155,4 +164,22 @@ export async function resolveComplaint(formData: FormData) {
   revalidatePath('/complaints')
   revalidatePath('/')
   revalidatePath('/customers')
+}
+
+export async function deleteCustomerAction(formData: FormData) {
+  const customerId = formData.get('customerId') as string
+  if (!customerId) throw new Error('Customer ID required')
+
+  // Run as a transaction to delete all related records first
+  await prisma.$transaction([
+    prisma.interaction.deleteMany({ where: { customerId } }),
+    prisma.task.deleteMany({ where: { customerId } }),
+    prisma.vehicle.deleteMany({ where: { customerId } }),
+    prisma.complaint.deleteMany({ where: { customerId } }),
+    prisma.customer.delete({ where: { id: customerId } })
+  ])
+
+  revalidatePath('/customers')
+  revalidatePath('/queue')
+  revalidatePath('/')
 }

@@ -29,7 +29,13 @@ export function FastEntryForm() {
     const model = formData.get('model') as string
     
     try {
-      await addCustomer(formData)
+      const result = await addCustomer(formData)
+      if (result?.error) {
+        alert(result.error)
+        setLoading(false)
+        return
+      }
+
       setLastAdded({ name, model })
       formRef.current?.reset()
       setDateStr(new Date().toLocaleDateString('en-GB')) // reset date

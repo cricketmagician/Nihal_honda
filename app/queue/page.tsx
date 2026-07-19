@@ -38,13 +38,32 @@ export default async function QueuePage() {
       ) : (
         <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           {/* Customer Header */}
-          <div className="bg-blue-600 p-6 text-white">
-            <h2 className="text-2xl font-bold">{task.customer.name}</h2>
-            <p className="text-blue-100 mt-1">📞 {task.customer.phone}</p>
-            <div className="mt-4 flex gap-2">
+          <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 md:p-8 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 opacity-10 transform translate-x-4 -translate-y-4">
+              <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative z-10">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight">{task.customer.name}</h2>
+                <div className="flex items-center gap-2 mt-2 text-gray-300">
+                  <span className="text-lg">📞</span>
+                  <span className="font-mono">{task.customer.phone}</span>
+                </div>
+              </div>
+              
+              <a 
+                href={`tel:${task.customer.phone}`} 
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-green-500/30 flex items-center gap-2 active:scale-95 w-full sm:w-auto justify-center"
+              >
+                <span className="text-xl">📞</span> CALL NOW
+              </a>
+            </div>
+            
+            <div className="mt-6 flex gap-2 relative z-10">
               {task.customer.vehicles.map(v => (
-                <span key={v.id} className="bg-blue-800/50 px-3 py-1 rounded-full text-xs font-medium">
-                  {v.model}
+                <span key={v.id} className="bg-white/10 border border-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide">
+                  🏍 {v.model}
                 </span>
               ))}
             </div>

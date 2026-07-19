@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import Link from 'next/link'
 import { SearchBar } from './SearchBar'
+import { DeleteCustomerButton } from './DeleteCustomerButton'
 
 const prisma = new PrismaClient()
 
@@ -104,9 +105,14 @@ export default async function CustomersPage({ searchParams }: { searchParams?: P
               ✕
             </Link>
 
-            <header className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 pr-10">{selectedCustomer.name}</h1>
-              {selectedCustomer.fatherName && <p className="text-sm text-gray-500 mt-1">S/O {selectedCustomer.fatherName}</p>}
+            <header className="mb-8 flex justify-between items-start">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 pr-10">{selectedCustomer.name}</h1>
+                {selectedCustomer.fatherName && <p className="text-sm text-gray-500 mt-1">S/O {selectedCustomer.fatherName}</p>}
+              </div>
+              <div className="mr-8">
+                <DeleteCustomerButton customerId={selectedCustomer.id} customerName={selectedCustomer.name} />
+              </div>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
