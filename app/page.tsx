@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { addCustomer } from './actions'
+import { QuickAddForm } from './QuickAddForm'
 
 const prisma = new PrismaClient()
 
@@ -109,27 +110,7 @@ export default async function OwnerDashboard() {
           <div className="bg-white/[0.02] border border-blue-500/20 rounded-2xl backdrop-blur-xl p-6 mb-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-10 text-4xl">➕</div>
             <h2 className="text-lg font-medium mb-4 text-blue-100">Quick Add Customer</h2>
-            <form action={addCustomer} className="space-y-4">
-              <div>
-                <label className="text-xs text-gray-400 mb-1 block">Customer Name *</label>
-                <input type="text" name="name" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:border-blue-500 outline-none" placeholder="e.g. Rahul Sharma" />
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 mb-1 block">Mobile Number *</label>
-                <input type="tel" name="phone" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:border-blue-500 outline-none" placeholder="e.g. 9876543210" />
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 mb-1 block">Bike Model *</label>
-                <input type="text" name="model" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:border-blue-500 outline-none" placeholder="e.g. Jupiter 125" />
-              </div>
-              <div>
-                <label className="text-xs text-gray-400 mb-1 block">Purchase Date *</label>
-                <input type="date" name="purchaseDate" required className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-white focus:border-blue-500 outline-none" />
-              </div>
-              <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors text-sm mt-2">
-                Add & Queue Follow-up
-              </button>
-            </form>
+            <QuickAddForm />
           </div>
 
           {/* Performance Overview */}
